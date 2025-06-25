@@ -1,0 +1,19 @@
+input {
+  n: int;
+} satisfies {
+  1 <= n <= 10;
+}
+
+output {
+  res: int;
+}
+
+solution {
+  var x: int = 0, y: int = 0;
+  for(1 <= i <= n) {
+    var t: int = x;
+    x = y;
+    y = x + t;
+  }
+  print(y);
+}

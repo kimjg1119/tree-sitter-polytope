@@ -1,0 +1,39 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "polytope_parser",
+      "camelcase": "PolytopeParser",
+      "title": "Polytope-Parser",
+      "scope": "source.polytope_parser",
+      "file-types": [
+        "poly"
+      ],
+      "injection-regex": "^polytope_parser$",
+      "class-name": "TreeSitterPolytopeParser"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Parser of Polytope",
+    "authors": [
+      {
+        "name": "Jungyeom Kim",
+        "email": "kimjg1199lock@gmail.com"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/kimjg1119/polytope-parser"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}
