@@ -1,0 +1,177 @@
+==================
+Int literal expression
+==================
+input {} satisfies {}
+output {}
+solution { 42; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (int_literal))))
+
+==================
+String literal expression
+==================
+input {} satisfies {}
+output {}
+solution { "hello"; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (string_literal))))
+
+==================
+Variable reference expression
+==================
+input {} satisfies {}
+output {}
+solution { a; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (refer_expr))))
+
+==================
+Addition expression
+==================
+input {} satisfies {}
+output {}
+solution { 1 + 2; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (addition_op))))
+
+==================
+Multiplication precedence
+==================
+input {} satisfies {}
+output {}
+solution { 1 + 2 * 3; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (addition_op
+        left: (int_literal)
+        right: (multiplication_op)))))
+
+==================
+Comparison expression
+==================
+input {} satisfies {}
+output {}
+solution { 1 < 2; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (comparison_op))))
+
+==================
+Logical expression
+==================
+input {} satisfies {}
+output {}
+solution { 1 < 2 && 3 < 4; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (expr_stmt
+      (logical_op))))
+
+==================
+Variable declaration statement
+==================
+input {} satisfies {}
+output {}
+solution { var x: int = 1; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (decl_stmt
+      (var_decl ...))))
+
+==================
+Assignment statement
+==================
+input {} satisfies {}
+output {}
+solution { var a: int = 0; a = 3; }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (compound_stmt
+      (decl_stmt ...)
+      (assign_stmt))))
+
+==================
+Print statement
+==================
+input {} satisfies {}
+output {}
+solution { print(1); }
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (print_stmt ...)))
+
+==================
+If-else statement
+==================
+input {} satisfies {}
+output {}
+solution {
+  if(1 < 2) {
+    print(1);
+  } else {
+    print(2);
+  }
+}
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (if_stmt ...)))
+
+==================
+For statement
+==================
+input {} satisfies {}
+output {}
+solution {
+  for(1 <= i <= 10) {
+    print(i);
+  }
+}
+---
+(source_file
+  (input ...)
+  (output ...)
+  (solution
+    (for_stmt ...)))

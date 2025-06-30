@@ -26,12 +26,12 @@ const sep1opt = (p, c) => seq(sep1(p, c), optional(c));
 
 module.exports = grammar({
   name: "polytope_parser",
-  word: $ => $.id,
+  word: $ => $.identifier,
 
   rules: {
     source_file: ($) => seq(field("input", $.input), field("output", $.output), field("solution", $.solution)),
 
-    id: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
+    identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
 
     input: ($) =>
       seq(
@@ -49,7 +49,7 @@ module.exports = grammar({
       seq("output", "{", field("body", repeat($.output_line)), "}"),
     solution: ($) => seq("solution", "{", field("body", repeat($._stmt)), "}"),
 
-    io_target: ($) => seq(field("id", $.id), ":", field("type", $._type)),
+    io_target: ($) => seq(field("id", $.identifier), ":", field("type", $._type)),
     input_line: ($) => seq(field("targets", sep1($.io_target, ",")), ";"),
     output_line: ($) => seq(field("targets", sep1($.io_target, ",")), ";"),
 
@@ -63,7 +63,7 @@ module.exports = grammar({
         $.expr_stmt
       ),
 
-    assign_stmt: ($) => seq($.id, "=", $._expr, ";"),
+    assign_stmt: ($) => seq($.identifier, "=", $._expr, ";"),
     if_stmt: ($) =>
       seq(
         "if",
@@ -81,7 +81,7 @@ module.exports = grammar({
         "(",
         field("lb", $._expr),
         "<=",
-        field("id", $.id),
+        field("id", $.identifier),
         "<=",
         field("ub", $._expr),
         ")",
@@ -97,19 +97,18 @@ module.exports = grammar({
     var_decl: ($) => seq("var", sep1($.single_var_decl, ",")),
     single_var_decl: ($) =>
       seq(
-        field("id", $.id),
+        field("id", $.identifier),
         ":",
         $._type,
         field("value", optional(seq("=", $._expr)))
       ),
 
     _expr: ($) =>
-      choice($.refer_expr, $.call_expr, $.int_literal, $.string_literal, $._op),
+      choice($.call_expr, $.identifier, $.int_literal, $.string_literal, $.unary_expr, $.binary_expr),
 
-    refer_expr: ($) => $.id,
     call_expr: ($) =>
       seq(
-        field("callee", $.id),
+        field("callee", $.identifier),
         "(",
         field("argument", sep($._expr, ",")),
         ")"
@@ -117,20 +116,39 @@ module.exports = grammar({
     int_literal: ($) => /\d+/,
     string_literal: ($) => seq('"', repeat(/[^"]|\\["\\]/), '"'),
 
-    _op: ($) => choice($.binary_op, $.unary_op),
+    unary_op: ($) => choice("+", "-", "!", "~"),
+    unary_expr: ($) => prec.right(5, seq(field("op", $.unary_op), field("expr", $._expr))),
 
-    unary_op: ($) => prec.right(2, seq(choice("+", "-", "!", "~"), $._expr)),
-    binary_op: ($) =>
-      choice($.multiplication_op, $.addition_op, $.comparison_op, $.logical_op),
-    multiplication_op: ($) =>
-      prec.left(4, seq($._expr, choice("*", "/", "%"), $._expr)),
-    addition_op: ($) => prec.left(3, seq($._expr, choice("+", "-"), $._expr)),
-    comparison_op: ($) =>
-      prec.left(
-        2,
-        seq($._expr, choice("==", "!=", "<", "<=", ">", ">="), $._expr)
+    binary_operator: ($) => choice(
+      "&&", "||",
+      "==", "!=", "<", "<=", ">", ">=",
+      "+", "-",
+      "*", "/", "%"
+    ),
+
+    binary_expr: ($) =>
+      choice(
+        prec.left(1, seq(
+          field("left", $._expr),
+          field("op", alias(choice("&&", "||"), $.binary_operator)),
+          field("right", $._expr)
+        )),
+        prec.left(2, seq(
+          field("left", $._expr),
+          field("op", alias(choice("==", "!=", "<", "<=", ">", ">="), $.binary_operator)),
+          field("right", $._expr)
+        )),
+        prec.left(3, seq(
+          field("left", $._expr),
+          field("op", alias(choice("+", "-"), $.binary_operator)),
+          field("right", $._expr)
+        )),
+        prec.left(4, seq(
+          field("left", $._expr),
+          field("op", alias(choice("*", "/", "%"), $.binary_operator)),
+          field("right", $._expr)
+        ))
       ),
-    logical_op: ($) => prec.left(1, seq($._expr, choice("&&", "||"), $._expr)),
 
     _type: ($) => choice("int", "string"),
   },
