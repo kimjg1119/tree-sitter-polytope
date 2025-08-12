@@ -1,14 +1,64 @@
 [
   {
+    "type": "array_type",
+    "named": true,
+    "fields": {
+      "elem": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "array_type",
+            "named": true
+          },
+          {
+            "type": "atomic_type",
+            "named": true
+          }
+        ]
+      },
+      "size": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "int_literal_expr",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "assign_op",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "assign_stmt",
     "named": true,
-    "fields": {},
+    "fields": {
+      "op": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "assign_op",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": true,
       "required": true,
       "types": [
         {
           "type": "binary_expr",
+          "named": true
+        },
+        {
+          "type": "bool_literal_expr",
           "named": true
         },
         {
@@ -20,11 +70,19 @@
           "named": true
         },
         {
-          "type": "int_literal",
+          "type": "index_expr",
           "named": true
         },
         {
-          "type": "string_literal",
+          "type": "int_literal_expr",
+          "named": true
+        },
+        {
+          "type": "paren_expr",
+          "named": true
+        },
+        {
+          "type": "string_literal_expr",
           "named": true
         },
         {
@@ -33,6 +91,11 @@
         }
       ]
     }
+  },
+  {
+    "type": "atomic_type",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "binary_expr",
@@ -47,6 +110,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -55,11 +122,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -73,7 +148,7 @@
         "required": true,
         "types": [
           {
-            "type": "binary_operator",
+            "type": "binary_op",
             "named": true
           }
         ]
@@ -87,6 +162,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -95,11 +174,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -109,6 +196,16 @@
         ]
       }
     }
+  },
+  {
+    "type": "bool_literal_expr",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "break_stmt",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "call_expr",
@@ -127,6 +224,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -135,11 +236,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -161,6 +270,11 @@
     }
   },
   {
+    "type": "continue_stmt",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "decl_stmt",
     "named": true,
     "fields": {},
@@ -168,6 +282,10 @@
       "multiple": false,
       "required": true,
       "types": [
+        {
+          "type": "function_decl",
+          "named": true
+        },
         {
           "type": "var_decl",
           "named": true
@@ -188,6 +306,10 @@
           "named": true
         },
         {
+          "type": "bool_literal_expr",
+          "named": true
+        },
+        {
           "type": "call_expr",
           "named": true
         },
@@ -196,11 +318,19 @@
           "named": true
         },
         {
-          "type": "int_literal",
+          "type": "index_expr",
           "named": true
         },
         {
-          "type": "string_literal",
+          "type": "int_literal_expr",
+          "named": true
+        },
+        {
+          "type": "paren_expr",
+          "named": true
+        },
+        {
+          "type": "string_literal_expr",
           "named": true
         },
         {
@@ -223,6 +353,14 @@
             "named": true
           },
           {
+            "type": "break_stmt",
+            "named": true
+          },
+          {
+            "type": "continue_stmt",
+            "named": true
+          },
+          {
             "type": "decl_stmt",
             "named": true
           },
@@ -240,6 +378,10 @@
           },
           {
             "type": "print_stmt",
+            "named": true
+          },
+          {
+            "type": "while_stmt",
             "named": true
           }
         ]
@@ -263,6 +405,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -271,11 +417,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -293,6 +447,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -301,11 +459,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -314,6 +480,72 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "function_decl",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "assign_stmt",
+            "named": true
+          },
+          {
+            "type": "break_stmt",
+            "named": true
+          },
+          {
+            "type": "continue_stmt",
+            "named": true
+          },
+          {
+            "type": "decl_stmt",
+            "named": true
+          },
+          {
+            "type": "expr_stmt",
+            "named": true
+          },
+          {
+            "type": "for_stmt",
+            "named": true
+          },
+          {
+            "type": "if_stmt",
+            "named": true
+          },
+          {
+            "type": "print_stmt",
+            "named": true
+          },
+          {
+            "type": "while_stmt",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "array_type",
+          "named": true
+        },
+        {
+          "type": "atomic_type",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -329,6 +561,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -337,11 +573,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -359,6 +603,14 @@
             "named": true
           },
           {
+            "type": "break_stmt",
+            "named": true
+          },
+          {
+            "type": "continue_stmt",
+            "named": true
+          },
+          {
             "type": "decl_stmt",
             "named": true
           },
@@ -376,6 +628,10 @@
           },
           {
             "type": "print_stmt",
+            "named": true
+          },
+          {
+            "type": "while_stmt",
             "named": true
           }
         ]
@@ -389,6 +645,14 @@
             "named": true
           },
           {
+            "type": "break_stmt",
+            "named": true
+          },
+          {
+            "type": "continue_stmt",
+            "named": true
+          },
+          {
             "type": "decl_stmt",
             "named": true
           },
@@ -406,6 +670,68 @@
           },
           {
             "type": "print_stmt",
+            "named": true
+          },
+          {
+            "type": "while_stmt",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "index_expr",
+    "named": true,
+    "fields": {
+      "array": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "index": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binary_expr",
+            "named": true
+          },
+          {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
+            "type": "call_expr",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "index_expr",
+            "named": true
+          },
+          {
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
+            "named": true
+          },
+          {
+            "type": "unary_expr",
             "named": true
           }
         ]
@@ -481,12 +807,49 @@
         "required": true,
         "types": [
           {
-            "type": "int",
-            "named": false
+            "type": "array_type",
+            "named": true
           },
           {
-            "type": "string",
-            "named": false
+            "type": "atomic_type",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "main",
+    "named": true,
+    "root": true,
+    "fields": {
+      "input": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "input",
+            "named": true
+          }
+        ]
+      },
+      "output": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "output",
+            "named": true
+          }
+        ]
+      },
+      "solution": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "solution",
+            "named": true
           }
         ]
       }
@@ -529,6 +892,54 @@
     }
   },
   {
+    "type": "paren_expr",
+    "named": true,
+    "fields": {
+      "expr": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binary_expr",
+            "named": true
+          },
+          {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
+            "type": "call_expr",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "index_expr",
+            "named": true
+          },
+          {
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
+            "named": true
+          },
+          {
+            "type": "unary_expr",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
     "type": "print_stmt",
     "named": true,
     "fields": {
@@ -541,53 +952,7 @@
             "named": true
           },
           {
-            "type": "call_expr",
-            "named": true
-          },
-          {
-            "type": "identifier",
-            "named": true
-          },
-          {
-            "type": "int_literal",
-            "named": true
-          },
-          {
-            "type": "string_literal",
-            "named": true
-          },
-          {
-            "type": "unary_expr",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "single_var_decl",
-    "named": true,
-    "fields": {
-      "id": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "value": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "=",
-            "named": false
-          },
-          {
-            "type": "binary_expr",
+            "type": "bool_literal_expr",
             "named": true
           },
           {
@@ -599,11 +964,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -627,6 +1000,14 @@
             "named": true
           },
           {
+            "type": "break_stmt",
+            "named": true
+          },
+          {
+            "type": "continue_stmt",
+            "named": true
+          },
+          {
             "type": "decl_stmt",
             "named": true
           },
@@ -645,42 +1026,9 @@
           {
             "type": "print_stmt",
             "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "source_file",
-    "named": true,
-    "root": true,
-    "fields": {
-      "input": {
-        "multiple": false,
-        "required": true,
-        "types": [
+          },
           {
-            "type": "input",
-            "named": true
-          }
-        ]
-      },
-      "output": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "output",
-            "named": true
-          }
-        ]
-      },
-      "solution": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "solution",
+            "type": "while_stmt",
             "named": true
           }
         ]
@@ -688,7 +1036,7 @@
     }
   },
   {
-    "type": "string_literal",
+    "type": "string_literal_expr",
     "named": true,
     "fields": {}
   },
@@ -705,6 +1053,10 @@
             "named": true
           },
           {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
             "type": "call_expr",
             "named": true
           },
@@ -713,11 +1065,19 @@
             "named": true
           },
           {
-            "type": "int_literal",
+            "type": "index_expr",
             "named": true
           },
           {
-            "type": "string_literal",
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
             "named": true
           },
           {
@@ -746,16 +1106,167 @@
   {
     "type": "var_decl",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "single_var_decl",
-          "named": true
-        }
-      ]
+    "fields": {
+      "id": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "ty": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "array_type",
+            "named": true
+          },
+          {
+            "type": "atomic_type",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "=",
+            "named": false
+          },
+          {
+            "type": "binary_expr",
+            "named": true
+          },
+          {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
+            "type": "call_expr",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "index_expr",
+            "named": true
+          },
+          {
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
+            "named": true
+          },
+          {
+            "type": "unary_expr",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "while_stmt",
+    "named": true,
+    "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "assign_stmt",
+            "named": true
+          },
+          {
+            "type": "break_stmt",
+            "named": true
+          },
+          {
+            "type": "continue_stmt",
+            "named": true
+          },
+          {
+            "type": "decl_stmt",
+            "named": true
+          },
+          {
+            "type": "expr_stmt",
+            "named": true
+          },
+          {
+            "type": "for_stmt",
+            "named": true
+          },
+          {
+            "type": "if_stmt",
+            "named": true
+          },
+          {
+            "type": "print_stmt",
+            "named": true
+          },
+          {
+            "type": "while_stmt",
+            "named": true
+          }
+        ]
+      },
+      "cond": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "binary_expr",
+            "named": true
+          },
+          {
+            "type": "bool_literal_expr",
+            "named": true
+          },
+          {
+            "type": "call_expr",
+            "named": true
+          },
+          {
+            "type": "identifier",
+            "named": true
+          },
+          {
+            "type": "index_expr",
+            "named": true
+          },
+          {
+            "type": "int_literal_expr",
+            "named": true
+          },
+          {
+            "type": "paren_expr",
+            "named": true
+          },
+          {
+            "type": "string_literal_expr",
+            "named": true
+          },
+          {
+            "type": "unary_expr",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -767,6 +1278,10 @@
     "named": false
   },
   {
+    "type": "%=",
+    "named": false
+  },
+  {
     "type": "(",
     "named": false
   },
@@ -775,7 +1290,15 @@
     "named": false
   },
   {
+    "type": "*=",
+    "named": false
+  },
+  {
     "type": "+",
+    "named": false
+  },
+  {
+    "type": "+=",
     "named": false
   },
   {
@@ -784,6 +1307,14 @@
   },
   {
     "type": "-",
+    "named": false
+  },
+  {
+    "type": "-=",
+    "named": false
+  },
+  {
+    "type": "/=",
     "named": false
   },
   {
@@ -803,11 +1334,39 @@
     "named": false
   },
   {
-    "type": "binary_operator",
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "binary_op",
     "named": true
   },
   {
+    "type": "bool",
+    "named": false
+  },
+  {
+    "type": "break",
+    "named": false
+  },
+  {
+    "type": "continue",
+    "named": false
+  },
+  {
+    "type": "def",
+    "named": false
+  },
+  {
     "type": "else",
+    "named": false
+  },
+  {
+    "type": "false",
     "named": false
   },
   {
@@ -831,7 +1390,7 @@
     "named": false
   },
   {
-    "type": "int_literal",
+    "type": "int_literal_expr",
     "named": true
   },
   {
@@ -855,7 +1414,15 @@
     "named": false
   },
   {
+    "type": "true",
+    "named": false
+  },
+  {
     "type": "var",
+    "named": false
+  },
+  {
+    "type": "while",
     "named": false
   },
   {

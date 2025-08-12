@@ -14,22 +14,27 @@ const KEYWORDS = [
   "if",
   "else",
   "for",
+  "while",
   "print",
+  "continue",
+  "break",
   "var",
   "int",
   "string",
+  "bool",
+  "def",
+  "true",
+  "false",
 ];
-const blocked = (p) => seq("{", p, "}");
 const sep = (p, c) => optional(sep1(p, c));
 const sep1 = (p, c) => seq(p, repeat(seq(c, p)));
-const sep1opt = (p, c) => seq(sep1(p, c), optional(c));
 
 module.exports = grammar({
   name: "polytope_parser",
   word: $ => $.identifier,
 
   rules: {
-    source_file: ($) => seq(field("input", $.input), field("output", $.output), field("solution", $.solution)),
+    main: ($) => seq(field("input", $.input), field("output", $.output), field("solution", $.solution)),
 
     identifier: $ => /[a-zA-Z_][a-zA-Z0-9_]*/,
 
@@ -58,23 +63,34 @@ module.exports = grammar({
         $.assign_stmt,
         $.if_stmt,
         $.for_stmt,
+        $.while_stmt,
         $.print_stmt,
         $.decl_stmt,
+        $.continue_stmt,
+        $.break_stmt,
         $.expr_stmt
       ),
 
-    assign_stmt: ($) => seq($.identifier, "=", $._expr, ";"),
+    assign_stmt: ($) =>
+      seq(choice($.identifier, $.index_expr), field("op", $.assign_op), $._expr, ";"),
     if_stmt: ($) =>
-      seq(
+      prec.right(seq(
         "if",
         "(",
         field("cond", $._expr),
         ")",
-        "{",
-        field("then", repeat($._stmt)),
-        "}",
-        optional(seq("else", "{", field("else", repeat($._stmt)), "}"))
-      ),
+        choice(
+          seq("{", field("then", repeat($._stmt)), "}"),
+          field("then", $._stmt)
+        ),
+        optional(seq(
+          "else",
+          choice(
+            seq("{", field("else", repeat($._stmt)), "}"),
+            field("else", $._stmt)
+          )
+        ))
+      )),
     for_stmt: ($) =>
       prec.left(10, seq(
         "for",
@@ -85,26 +101,46 @@ module.exports = grammar({
         "<=",
         field("ub", $._expr),
         ")",
-        "{",
-        field("body", repeat($._stmt)),
-        "}"
+        choice(
+          seq("{", field("body", repeat($._stmt)), "}"),
+          field("body", $._stmt)
+        )
       )),
+    while_stmt: ($) =>
+      seq(
+        "while",
+        "(", field("cond", $._expr), ")",
+        choice(
+          seq("{", field("body", repeat($._stmt)), "}"),
+          field("body", $._stmt)
+        )
+      ),
     print_stmt: ($) => seq("print", "(", field("expr", $._expr), ")", ";"),
     decl_stmt: ($) => seq($._decl, ";"),
+    continue_stmt: ($) => seq("continue", ";"),
+    break_stmt: ($) => seq("break", ";"),
     expr_stmt: ($) => seq($._expr, ";"),
 
-    _decl: ($) => choice($.var_decl),
-    var_decl: ($) => seq("var", sep1($.single_var_decl, ",")),
-    single_var_decl: ($) =>
+    assign_op: ($) => choice("=", "+=", "-=", "*=", "/=", "%="),
+
+    _decl: ($) => choice($.var_decl, $.function_decl),
+    function_decl: ($) => seq("def", $.identifier, "(", repeat(seq($.identifier, ":", $._type)), ")", "{", field("body", repeat($._stmt)), "}"),
+
+    var_decl: ($) =>
       seq(
+        "var",
         field("id", $.identifier),
         ":",
-        $._type,
+        field("ty", $._type,),
         field("value", optional(seq("=", $._expr)))
       ),
 
     _expr: ($) =>
-      choice($.call_expr, $.identifier, $.int_literal, $.string_literal, $.unary_expr, $.binary_expr),
+      choice($.paren_expr, $.call_expr, $.index_expr, $.identifier, $.int_literal_expr, $.string_literal_expr, $.bool_literal_expr, $.unary_expr, $.binary_expr),
+    index_expr: ($) =>
+      seq(field("array", $.identifier), "[", field("index", $._expr), "]"),
+
+    paren_expr: ($) => seq("(", field("expr", $._expr), ")"),
 
     call_expr: ($) =>
       seq(
@@ -113,43 +149,45 @@ module.exports = grammar({
         field("argument", sep($._expr, ",")),
         ")"
       ),
-    int_literal: ($) => /\d+/,
-    string_literal: ($) => seq('"', repeat(/[^"]|\\["\\]/), '"'),
+    int_literal_expr: ($) => /\d+/,
+    string_literal_expr: ($) => seq('"', repeat(/[^"]|\\["\\]/), '"'),
+    bool_literal_expr: ($) => choice("true", "false"),
+    unary_expr: ($) => prec.right(5, seq(field("op", $.unary_op), field("expr", $._expr))),
+    binary_expr: ($) =>
+      choice(
+        prec.left(1, seq(
+          field("left", $._expr),
+          field("op", alias(choice("&&", "||"), $.binary_op)),
+          field("right", $._expr)
+        )),
+        prec.left(2, seq(
+          field("left", $._expr),
+          field("op", alias(choice("==", "!=", "<", "<=", ">", ">="), $.binary_op)),
+          field("right", $._expr)
+        )),
+        prec.left(3, seq(
+          field("left", $._expr),
+          field("op", alias(choice("+", "-"), $.binary_op)),
+          field("right", $._expr)
+        )),
+        prec.left(4, seq(
+          field("left", $._expr),
+          field("op", alias(choice("*", "/", "%"), $.binary_op)),
+          field("right", $._expr)
+        ))
+      ),
+
+    _op: ($) => choice($.unary_op, $.binary_op),
 
     unary_op: ($) => choice("+", "-", "!", "~"),
-    unary_expr: ($) => prec.right(5, seq(field("op", $.unary_op), field("expr", $._expr))),
-
-    binary_operator: ($) => choice(
+    binary_op: ($) => choice(
       "&&", "||",
       "==", "!=", "<", "<=", ">", ">=",
       "+", "-",
       "*", "/", "%"
     ),
-
-    binary_expr: ($) =>
-      choice(
-        prec.left(1, seq(
-          field("left", $._expr),
-          field("op", alias(choice("&&", "||"), $.binary_operator)),
-          field("right", $._expr)
-        )),
-        prec.left(2, seq(
-          field("left", $._expr),
-          field("op", alias(choice("==", "!=", "<", "<=", ">", ">="), $.binary_operator)),
-          field("right", $._expr)
-        )),
-        prec.left(3, seq(
-          field("left", $._expr),
-          field("op", alias(choice("+", "-"), $.binary_operator)),
-          field("right", $._expr)
-        )),
-        prec.left(4, seq(
-          field("left", $._expr),
-          field("op", alias(choice("*", "/", "%"), $.binary_operator)),
-          field("right", $._expr)
-        ))
-      ),
-
-    _type: ($) => choice("int", "string"),
+    _type: ($) => choice($.atomic_type, $.array_type),
+    array_type: ($) => seq(field("elem", $._type), "[", field("size", $.int_literal_expr), "]"),
+    atomic_type: ($) => choice("int", "string", "bool"),
   },
 });

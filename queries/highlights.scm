@@ -15,23 +15,9 @@
   "string"
 ] @type
 
-(int_literal) @number
-(string_literal) @string
-(id) @variable
+(int_literal_expr) @number
+(string_literal_expr) @string
+(identifier) @variable
 
-[
-  "+"
-  "-"
-  "*"
-  "/"
-  "%"
-  "=="
-  "!="
-  "<"
-  ">"
-  "<="
-  ">="
-  "&&"
-  "||"
-  "!"
-] @operator
+(binary_op) @operator
+(unary_op) @operator

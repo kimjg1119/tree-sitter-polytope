@@ -5,12 +5,12 @@ input {} satisfies {}
 output {}
 solution { 42; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (int_literal))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (int_literal_expr))))
 
 ==================
 String literal expression
@@ -19,12 +19,12 @@ input {} satisfies {}
 output {}
 solution { "hello"; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (string_literal))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (string_literal_expr))))
 
 ==================
 Variable reference expression
@@ -33,12 +33,12 @@ input {} satisfies {}
 output {}
 solution { a; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (refer_expr))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (identifier))))
 
 ==================
 Addition expression
@@ -47,12 +47,15 @@ input {} satisfies {}
 output {}
 solution { 1 + 2; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (addition_op))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (binary_expr
+        left: (int_literal_expr)
+        op: (binary_op)
+        right: (int_literal_expr)))))
 
 ==================
 Multiplication precedence
@@ -61,14 +64,39 @@ input {} satisfies {}
 output {}
 solution { 1 + 2 * 3; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (addition_op
-        left: (int_literal)
-        right: (multiplication_op)))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (binary_expr
+        left: (int_literal_expr)
+        op: (binary_op)
+        right: (binary_expr
+          left: (int_literal_expr)
+          op: (binary_op)
+          right: (int_literal_expr))))))
+
+==================
+Parenthesized expression
+==================
+input {} satisfies {}
+output {}
+solution { (1 + 2) * 3; }
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (binary_expr
+        left: (paren_expr
+          expr: (binary_expr
+            left: (int_literal_expr)
+            op: (binary_op)
+            right: (int_literal_expr)))
+        op: (binary_op)
+        right: (int_literal_expr)))))
 
 ==================
 Comparison expression
@@ -77,12 +105,15 @@ input {} satisfies {}
 output {}
 solution { 1 < 2; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (comparison_op))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (binary_expr
+        left: (int_literal_expr)
+        op: (binary_op)
+        right: (int_literal_expr)))))
 
 ==================
 Logical expression
@@ -91,12 +122,21 @@ input {} satisfies {}
 output {}
 solution { 1 < 2 && 3 < 4; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (expr_stmt
-      (logical_op))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (expr_stmt
+      (binary_expr
+        left: (binary_expr
+          left: (int_literal_expr)
+          op: (binary_op)
+          right: (int_literal_expr))
+        op: (binary_op)
+        right: (binary_expr
+          left: (int_literal_expr)
+          op: (binary_op)
+          right: (int_literal_expr))))))
 
 ==================
 Variable declaration statement
@@ -105,12 +145,15 @@ input {} satisfies {}
 output {}
 solution { var x: int = 1; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (decl_stmt
-      (var_decl ...))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (var_decl
+        id: (identifier)
+        ty: (atomic_type)
+        value: (int_literal_expr)))))
 
 ==================
 Assignment statement
@@ -119,13 +162,19 @@ input {} satisfies {}
 output {}
 solution { var a: int = 0; a = 3; }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (compound_stmt
-      (decl_stmt ...)
-      (assign_stmt))))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (var_decl
+        id: (identifier)
+        ty: (atomic_type)
+        value: (int_literal_expr)))
+    body: (assign_stmt
+      (identifier)
+      op: (assign_op)
+      (int_literal_expr))))
 
 ==================
 Print statement
@@ -134,11 +183,12 @@ input {} satisfies {}
 output {}
 solution { print(1); }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (print_stmt ...)))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (print_stmt
+      expr: (int_literal_expr))))
 
 ==================
 If-else statement
@@ -153,11 +203,17 @@ solution {
   }
 }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (if_stmt ...)))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (if_stmt
+      cond: (binary_expr
+        left: (int_literal_expr)
+        op: (binary_op)
+        right: (int_literal_expr))
+      then: (print_stmt expr: (int_literal_expr))
+      else: (print_stmt expr: (int_literal_expr)))))
 
 ==================
 For statement
@@ -170,8 +226,246 @@ solution {
   }
 }
 ---
-(source_file
-  (input ...)
-  (output ...)
-  (solution
-    (for_stmt ...)))
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (for_stmt
+      lb: (int_literal_expr)
+      id: (identifier)
+      ub: (int_literal_expr)
+      body: (print_stmt expr: (identifier)))))
+
+==================
+While / continue / break statements
+==================
+input {} satisfies {}
+output {}
+solution {
+  var x: int = 0;
+  while (x < 10) {
+    if (x == 5) {
+      continue;
+    }
+    if (x == 8) {
+      break;
+    }
+    x = x + 1;
+  }
+}
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (var_decl
+        id: (identifier)
+        ty: (atomic_type)
+        value: (int_literal_expr)))
+    body: (while_stmt
+      cond: (binary_expr
+        left: (identifier)
+        op: (binary_op)
+        right: (int_literal_expr))
+      body: (if_stmt
+        cond: (binary_expr
+          left: (identifier)
+          op: (binary_op)
+          right: (int_literal_expr))
+        then: (continue_stmt))
+      body: (if_stmt
+        cond: (binary_expr
+          left: (identifier)
+          op: (binary_op)
+          right: (int_literal_expr))
+        then: (break_stmt))
+      body: (assign_stmt
+        (identifier)
+        op: (assign_op)
+        (binary_expr
+          left: (identifier)
+          op: (binary_op)
+          right: (int_literal_expr))))))
+
+==================
+Assignment with operator
+==================
+input {} satisfies {}
+output {}
+solution { var x: int = 0; x += 3; }
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (var_decl
+        id: (identifier)
+        ty: (atomic_type)
+        value: (int_literal_expr)))
+    body: (assign_stmt
+      (identifier)
+      op: (assign_op)
+      (int_literal_expr))))
+
+==================
+If single-line bodies
+==================
+input {} satisfies {}
+output {}
+solution {
+  if (1 < 2) print(1); else print(2);
+}
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (if_stmt
+      cond: (binary_expr
+        left: (int_literal_expr)
+        op: (binary_op)
+        right: (int_literal_expr))
+      then: (print_stmt expr: (int_literal_expr))
+      else: (print_stmt expr: (int_literal_expr)))))
+
+==================
+For single-line body
+==================
+input {} satisfies {}
+output {}
+solution { for(1 <= i <= 3) print(i); }
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (for_stmt
+      lb: (int_literal_expr)
+      id: (identifier)
+      ub: (int_literal_expr)
+      body: (print_stmt expr: (identifier)))))
+
+==================
+While single-line body
+==================
+input {} satisfies {}
+output {}
+solution {
+  var y: int = 0;
+  while (y < 5) y = y + 1;
+}
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (var_decl
+        id: (identifier)
+        ty: (atomic_type)
+        value: (int_literal_expr)))
+    body: (while_stmt
+      cond: (binary_expr
+        left: (identifier)
+        op: (binary_op)
+        right: (int_literal_expr))
+      body: (assign_stmt
+        (identifier)
+        op: (assign_op)
+        (binary_expr
+          left: (identifier)
+          op: (binary_op)
+          right: (int_literal_expr))))))
+
+==================
+Function declaration (no params) and call (no args)
+==================
+input {} satisfies {}
+output {}
+solution {
+  def hello() {
+    print(1);
+  };
+  hello();
+}
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (function_decl
+        (identifier)
+        body: (print_stmt
+          expr: (int_literal_expr))))
+    body: (expr_stmt
+      (call_expr
+        callee: (identifier)))))
+
+==================
+Function declaration with params and call with args
+==================
+input {} satisfies {}
+output {}
+solution {
+  def add(a: int b: int) {
+    print(a + b);
+  };
+  add(1, 2);
+}
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (function_decl
+        (identifier)
+        (identifier)
+        (atomic_type)
+        (identifier)
+        (atomic_type)
+        body: (print_stmt
+          expr: (binary_expr
+            left: (identifier)
+            op: (binary_op)
+            right: (identifier)))))
+    body: (expr_stmt
+      (call_expr
+        callee: (identifier)
+        argument: (int_literal_expr)
+        argument: (int_literal_expr)))))
+
+==================
+Array type, assignment, and lookup
+==================
+input {} satisfies {}
+output {}
+solution {
+  var a: int[10];
+  a[0] = 42;
+  print(a[0]);
+}
+---
+(main
+  input: (input)
+  output: (output)
+  solution: (solution
+    body: (decl_stmt
+      (var_decl
+        id: (identifier)
+        ty: (array_type
+          elem: (atomic_type)
+          size: (int_literal_expr))))
+    body: (assign_stmt
+      (index_expr
+        array: (identifier)
+        index: (int_literal_expr))
+      op: (assign_op)
+      (int_literal_expr))
+    body: (print_stmt
+      expr: (index_expr
+        array: (identifier)
+        index: (int_literal_expr)))))
