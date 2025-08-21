@@ -1,0 +1,133 @@
+==================
+Restriction: distinct
+==================
+input {
+  a: int[5];
+} satisfies {
+  distinct(a);
+}
+output {}
+solution {}
+---
+(main
+  input: (input
+    body: (input_line
+      targets: (io_target
+        id: (identifier)
+        type: (array_type
+          elem: (atomic_type)
+          size: (int_literal_expr))))
+    restriction: (distinct_stmt
+      target: (identifier)))
+  output: (output)
+  solution: (solution))
+
+==================
+Restriction: sorted (default asc)
+==================
+input {
+  a: int[5];
+} satisfies {
+  sorted(a);
+}
+output {}
+solution {}
+---
+(main
+  input: (input
+    body: (input_line
+      targets: (io_target
+        id: (identifier)
+        type: (array_type
+          elem: (atomic_type)
+          size: (int_literal_expr))))
+    restriction: (sorted_stmt
+      target: (identifier)))
+  output: (output)
+  solution: (solution))
+
+==================
+Restriction: sorted with order
+==================
+input {
+  a: int[5];
+} satisfies {
+  sorted(a, desc);
+}
+output {}
+solution {}
+---
+(main
+  input: (input
+    body: (input_line
+      targets: (io_target
+        id: (identifier)
+        type: (array_type
+          elem: (atomic_type)
+          size: (int_literal_expr))))
+    restriction: (sorted_stmt
+      target: (identifier)
+      order: (sort_order)))
+  output: (output)
+  solution: (solution))
+
+==================
+Restriction: in_range
+==================
+input {
+  a: int[5];
+} satisfies {
+  in_range(a, 0, 10);
+}
+output {}
+solution {}
+---
+(main
+  input: (input
+    body: (input_line
+      targets: (io_target
+        id: (identifier)
+        type: (array_type
+          elem: (atomic_type)
+          size: (int_literal_expr))))
+    restriction: (in_range_stmt
+      target: (identifier)
+      lb: (int_literal_expr)
+      ub: (int_literal_expr)))
+  output: (output)
+  solution: (solution))
+
+
+==================
+Restriction: forall + in_range over indices
+==================
+input {
+  a: int[5];
+} satisfies {
+  forall 0 <= i <= 4 | in_range(a[i], -1000000000, 1000000000);
+}
+output {}
+solution {}
+---
+(main
+  input: (input
+    body: (input_line
+      targets: (io_target
+        id: (identifier)
+        type: (array_type
+          elem: (atomic_type)
+          size: (int_literal_expr))))
+    restriction: (forall_stmt
+      lb: (int_literal_expr)
+      id: (identifier)
+      ub: (int_literal_expr)
+      pred: (expr_stmt
+        (call_expr
+          callee: (identifier)
+          argument: (index_expr
+            array: (identifier)
+            index: (identifier))
+          argument: (int_literal_expr)
+          argument: (int_literal_expr)))))
+  output: (output)
+  solution: (solution))

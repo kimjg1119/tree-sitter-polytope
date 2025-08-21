@@ -25,6 +25,16 @@ const KEYWORDS = [
   "def",
   "true",
   "false",
+  // quantifier
+  "forall",
+  // restriction-related
+  "distinct",
+  "sorted",
+  "in_range",
+  "asc",
+  "desc",
+  "nondecreasing",
+  "nonincreasing",
 ];
 const sep = (p, c) => optional(sep1(p, c));
 const sep1 = (p, c) => seq(p, repeat(seq(c, p)));
@@ -46,10 +56,10 @@ module.exports = grammar({
         "}",
         "satisfies",
         "{",
-        field("restriction", sep($._restriction, ";")),
+        field("restriction", repeat($._restriction)),
         "}"
       ),
-    _restriction: ($) => $.expr_stmt,
+    _restriction: ($) => choice($.expr_stmt, $.distinct_stmt, $.sorted_stmt, $.in_range_stmt, $.forall_stmt),
     output: ($) =>
       seq("output", "{", field("body", repeat($.output_line)), "}"),
     solution: ($) => seq("solution", "{", field("body", repeat($._stmt)), "}"),
@@ -123,6 +133,50 @@ module.exports = grammar({
 
     assign_op: ($) => choice("=", "+=", "-=", "*=", "/=", "%="),
 
+    // --------------------
+    // Restriction statements (each ends with ';')
+    // --------------------
+    distinct_stmt: ($) => seq("distinct", "(", field("target", $.identifier), ")", ";"),
+    sorted_stmt: ($) =>
+      seq(
+        "sorted",
+        "(",
+        field("target", $.identifier),
+        optional(seq(
+          ",",
+          field("order", $.sort_order)
+        )),
+        ")",
+        ";"
+      ),
+    sort_order: ($) => choice("asc", "desc", "nondecreasing", "nonincreasing"),
+    in_range_stmt: ($) =>
+      seq(
+        "in_range",
+        "(",
+        field("target", choice($.identifier, $.index_expr)),
+        ",",
+        field("lb", $._expr),
+        ",",
+        field("ub", $._expr),
+        ")",
+        ";"
+      ),
+
+    // forall 1 <= i <= N | predicate;
+    forall_stmt: ($) =>
+      prec.left(10, seq(
+        "forall",
+        field("lb", $._expr),
+        "<=",
+        field("id", $.identifier),
+        "<=",
+        field("ub", $._expr),
+        "|",
+        field("pred", $._expr),
+        ";"
+      )),
+
     _decl: ($) => choice($.var_decl, $.function_decl),
     function_decl: ($) => seq("def", $.identifier, "(", repeat(seq($.identifier, ":", $._type)), ")", "{", field("body", repeat($._stmt)), "}"),
 
@@ -186,8 +240,24 @@ module.exports = grammar({
       "+", "-",
       "*", "/", "%"
     ),
+<<<<<<< Current (Your changes)
     _type: ($) => choice($.atomic_type, $.array_type),
-    array_type: ($) => seq(field("elem", $._type), "[", field("size", $.int_literal_expr), "]"),
+    array_type: ($) => seq(field("elem", $._type), "[", field("size", $._expr), "]"),
+=======
+    _type: ($) => choice($.atomic_type, $.array_type, $.vector_type),
+    // Array type: only allows static, literal sizes; explicit 'array:' discriminator
+    array_type: ($) =>
+      seq(
+        field("elem", $._type),
+        "[",
+        "array",
+        ":",
+        field("size", $.int_literal_expr),
+        "]"
+      ),
+    // Vector type: allows any expression size, e.g., int[N]
+    vector_type: ($) => seq(field("elem", $._type), "[", field("size", $._expr), "]"),
+>>>>>>> Incoming (Background Agent changes)
     atomic_type: ($) => choice("int", "string", "bool"),
   },
 });
